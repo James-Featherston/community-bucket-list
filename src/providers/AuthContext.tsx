@@ -17,12 +17,14 @@ type AuthContextType = {
   signUpNewUser: (email: string, password: string) => Promise<AuthResult>;
   signInUser: (email: string, password: string) => Promise<AuthResult>;
   logOutUser: () => void;
+  loadingSession: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
+  const [loadingSession, setLoadingSession] = useState(true);
 
   const signUpNewUser = async (
     email: string,
@@ -66,6 +68,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
+      setLoadingSession(false);
     });
     supabase.auth.onAuthStateChange((event, session) => {
       setTimeout(async () => {
@@ -75,7 +78,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
   return (
     <AuthContext.Provider
-      value={{ session, signUpNewUser, signInUser, logOutUser }}
+      value={{ session, signUpNewUser, signInUser, logOutUser, loadingSession }}
     >
       {children}
     </AuthContext.Provider>

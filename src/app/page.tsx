@@ -1,5 +1,11 @@
+import LogoutButton from "@/components/auth/LogoutButton";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+
 export default function Home() {
   return (
-    <div>Welcome Home</div>
+    <ProtectedRoute>
+      <div>Welcome Home</div>
+      <LogoutButton />
+    </ProtectedRoute>
   );
 }

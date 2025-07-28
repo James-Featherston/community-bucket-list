@@ -1,9 +1,12 @@
+import { AuthRedirect } from "@/components/auth/AuthRedirect";
 import SignUpForm from "@/components/auth/SignUpForm";
 
 const page = () => {
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <SignUpForm />
+      <AuthRedirect>
+        <SignUpForm />
+      </AuthRedirect>
     </div>
   );
 };

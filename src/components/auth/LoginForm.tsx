@@ -11,6 +11,7 @@ import { useAuthContext } from "@/providers/AuthContext";
 import { useRouter } from "next/navigation";
 import { TypographyH3 } from "../typography/h3";
 import Link from "next/link";
+import { TypographyP } from "../typography/p";
 
 const loginSchema = z.object({
   email: z.email(),
@@ -23,6 +24,7 @@ const LoginForm = () => {
   const router = useRouter();
   const { signInUser } = useAuthContext();
   const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -39,10 +41,11 @@ const LoginForm = () => {
       if (result.success) {
         router.push("/");
       } else {
-        form.setError("email", {
+        form.setError("password", {
           type: "manual",
           message: result.error?.message,
         });
+        console.log(result.error?.message);
       }
     } catch (error) {
       form.setError("email", {
@@ -50,6 +53,7 @@ const LoginForm = () => {
         message: "Unexpected error occurred. Please try again.",
       });
     } finally {
+      setFormError(null);
       setLoading(false);
     }
   };
@@ -60,7 +64,7 @@ const LoginForm = () => {
         className="w-100 border rounded-lg p-6 flex flex-col"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <TypographyH3 className="text-center">Sign In Today!</TypographyH3>
+        <TypographyH3 className="text-center">Login Today!</TypographyH3>
         <AuthFormField
           control={form.control}
           name="email"
@@ -80,11 +84,12 @@ const LoginForm = () => {
           type="submit"
           className="mx-3 hover:cursor-pointer"
         >
-          Signup
+          Login
         </Button>
         <Button asChild variant="link" className="px-0 text-sm">
           <Link href="/signup">Don't have an account? Signup</Link>
         </Button>
+        {formError && <TypographyP>{formError}</TypographyP>}
       </form>
     </Form>
   );
