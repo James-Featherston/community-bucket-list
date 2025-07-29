@@ -14,9 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-screen w-screen">
         <AppProviders>
-          <main className="p-3">{children}</main>
+          <main>{children}</main>
         </AppProviders>
       </body>
     </html>

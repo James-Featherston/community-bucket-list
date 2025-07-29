@@ -16,7 +16,7 @@ type AuthContextType = {
   session: Session | null;
   signUpNewUser: (email: string, password: string) => Promise<AuthResult>;
   signInUser: (email: string, password: string) => Promise<AuthResult>;
-  logOutUser: () => void;
+  logOutUser: () => Promise<void>;
   loadingSession: boolean;
 };
 
@@ -66,15 +66,22 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    const getSession = async () => {
+      const { data } = await supabase.auth.getSession();
       setSession(data.session);
       setLoadingSession(false);
-    });
-    supabase.auth.onAuthStateChange((event, session) => {
-      setTimeout(async () => {
+    };
+
+    const { data: subscription } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log("Auth event:", event); // helpful for debugging
         setSession(session);
-      }, 0);
-    });
+      }
+    );
+
+    getSession();
+
+    return () => subscription.subscription.unsubscribe();
   }, []);
   return (
     <AuthContext.Provider

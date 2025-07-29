@@ -4,8 +4,10 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 export default function Home() {
   return (
     <ProtectedRoute>
-      <div>Welcome Home</div>
-      <LogoutButton />
+      <div className="p-10">
+        <div>Welcome Home</div>
+        <LogoutButton />
+      </div>
     </ProtectedRoute>
   );
 }
